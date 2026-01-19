@@ -30,6 +30,8 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingControllerProvider);
     final controller = ref.read(onboardingControllerProvider.notifier);
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final blocks = [
       {'key': 'morning', 'label': '오전 (9~12)'},
@@ -40,49 +42,45 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: scheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.14),
-        ),
+        border: Border.all(color: scheme.outlineVariant),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.45),
-            blurRadius: 45,
-            offset: const Offset(0, 18),
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '어디에서 대부분의 시간을 보내나요?',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.6,
-              height: 1.2,
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+              height: 1.15,
+              color: scheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             '회사/학교 이름은 대충 적어도 돼요. 중요한 건 \'시간대\'예요.',
-            style: TextStyle(
-              fontSize: 13,
-              color: Color(0xA6FFFFFF),
+            style: textTheme.bodySmall?.copyWith(
               height: 1.45,
+              color: scheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '직장/학교/주 활동 이름 (선택)',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0x73FFFFFF),
+                style: textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
@@ -90,33 +88,32 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
                 controller: _orgController,
                 onChanged: (value) =>
                     controller.updateOrgName(value),
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xE8FFFFFF),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: '예) 네이버, OO중학교, 개인 개발',
-                  hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.35),
+                  hintStyle: textTheme.bodyMedium?.copyWith(
+                    color: scheme.onSurfaceVariant,
                   ),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.06),
+                  fillColor: scheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.14),
+                      color: scheme.outlineVariant,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.14),
+                      color: scheme.outlineVariant,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: Colors.white.withOpacity(0.3),
+                      color: scheme.primary,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -131,11 +128,10 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '주요 활동 시간대 (복수 선택)',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0x73FFFFFF),
+                style: textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 6),
@@ -145,6 +141,15 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
                 children: blocks.map((block) {
                   final isSelected =
                       state.activeBlocks.contains(block['key']);
+                  final bgColor = isSelected
+                      ? scheme.primaryContainer
+                      : scheme.surface;
+                  final borderColor = isSelected
+                      ? scheme.primary
+                      : scheme.outlineVariant;
+                  final textColor = isSelected
+                      ? scheme.onPrimaryContainer
+                      : scheme.onSurfaceVariant;
 
                   return GestureDetector(
                     onTap: () =>
@@ -155,33 +160,17 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
                         vertical: 9,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? null
-                            : Colors.white.withOpacity(0.06),
-                        gradient: isSelected
-                            ? const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0x382EE59D),
-                                  Color(0x2437D6FF),
-                                ],
-                              )
-                            : null,
+                        color: bgColor,
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(
-                          color: isSelected
-                              ? const Color(0x592EE59D)
-                              : Colors.white.withOpacity(0.14),
+                          color: borderColor,
                         ),
                       ),
                       child: Text(
                         block['label'] as String,
                         style: TextStyle(
                           fontSize: 12,
-                          color: isSelected
-                              ? const Color(0xE8FFFFFF)
-                              : const Color(0xA6FFFFFF),
+                          color: textColor,
                         ),
                       ),
                     ),
@@ -191,12 +180,11 @@ class _Step2ActivityState extends ConsumerState<Step2Activity> {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             '이 설정은 \'추천 제외 시간(업무시간)\'을 만들기 위해 사용돼요.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0x73FFFFFF),
+            style: textTheme.bodySmall?.copyWith(
               height: 1.4,
+              color: scheme.onSurfaceVariant,
             ),
           ),
         ],

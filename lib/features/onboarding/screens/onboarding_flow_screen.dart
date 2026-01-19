@@ -273,12 +273,14 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: state.canGoNext()
-                            ? () {
+                            ? () async {
                                 if (state.currentStep < 6) {
                                   controller.nextStep();
                                 } else {
-                                  controller.complete();
-                                  Navigator.of(context).pushReplacementNamed('/');
+                                  await controller.complete();
+                                  if (context.mounted) {
+                                    Navigator.of(context).pushReplacementNamed('/');
+                                  }
                                 }
                               }
                             : null,

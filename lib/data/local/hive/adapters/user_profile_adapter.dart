@@ -10,14 +10,21 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
 
   @override
   UserProfile read(BinaryReader reader) {
-    // Simplified implementation - full implementation would handle nested objects
+    final id = reader.readString();
+    final name = reader.readString();
+    final goals = List<YearGoal>.from(reader.read() as List);
+    final energyPattern = reader.read() as EnergyPattern?;
+    final createdAt = DateTime.parse(reader.readString());
+    final updatedAtStr = reader.readString();
+    final updatedAt =
+        updatedAtStr.isEmpty ? null : DateTime.parse(updatedAtStr);
     return UserProfile(
-      id: reader.readString(),
-      name: reader.readString(),
-      goals: [],
-      energyPattern: null,
-      createdAt: DateTime.parse(reader.readString()),
-      updatedAt: reader.readString().isEmpty ? null : DateTime.parse(reader.readString()),
+      id: id,
+      name: name,
+      goals: goals,
+      energyPattern: energyPattern,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 
@@ -25,6 +32,8 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
   void write(BinaryWriter writer, UserProfile obj) {
     writer.writeString(obj.id);
     writer.writeString(obj.name);
+    writer.write(obj.goals);
+    writer.write(obj.energyPattern);
     writer.writeString(obj.createdAt.toIso8601String());
     writer.writeString(obj.updatedAt?.toIso8601String() ?? '');
   }

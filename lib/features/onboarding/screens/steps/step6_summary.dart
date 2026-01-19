@@ -9,6 +9,8 @@ class Step6Summary extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(onboardingControllerProvider);
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     final lifeMap = {
       'worker': '직장인',
@@ -37,48 +39,45 @@ class Step6Summary extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: scheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.14),
-        ),
+        border: Border.all(color: scheme.outlineVariant),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.45),
-            blurRadius: 45,
-            offset: const Offset(0, 18),
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '완성! 이제 당신에게 맞춰질 거예요',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.6,
-              height: 1.2,
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+              height: 1.15,
+              color: scheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             '이 설정으로 \'지금 가능한 일\' 중심 추천이 시작돼요.',
-            style: TextStyle(
-              fontSize: 13,
-              color: Color(0xA6FFFFFF),
+            style: textTheme.bodySmall?.copyWith(
               height: 1.45,
+              color: scheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.06),
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: Colors.white.withOpacity(0.14),
+                color: scheme.outlineVariant,
               ),
             ),
             child: Column(
@@ -86,28 +85,31 @@ class Step6Summary extends ConsumerWidget {
                 _buildSummaryRow(
                   '생활 유형',
                   lifeMap[state.lifeType] ?? '-',
+                  scheme: scheme,
                 ),
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Color(0x14FFFFFF),
+                  color: scheme.outlineVariant,
                 ),
                 _buildSummaryRow(
                   '주 활동',
                   state.orgName.isEmpty ? '입력 없음' : state.orgName,
+                  scheme: scheme,
                 ),
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Color(0x14FFFFFF),
+                  color: scheme.outlineVariant,
                 ),
                 _buildSummaryRow(
                   '활동 시간대',
                   state.activeBlocks
                       .map((k) => blocksMap[k] ?? k)
                       .join(', '),
+                  scheme: scheme,
                 ),
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Color(0x14FFFFFF),
+                  color: scheme.outlineVariant,
                 ),
                 _buildSummaryRow(
                   '올해 목표',
@@ -115,18 +117,20 @@ class Step6Summary extends ConsumerWidget {
                       ? '-'
                       : state.yearGoals.join('\n'),
                   isMultiline: state.yearGoals.length > 1,
+                  scheme: scheme,
                 ),
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Color(0x14FFFFFF),
+                  color: scheme.outlineVariant,
                 ),
                 _buildSummaryRow(
                   '에너지(아침/오후/저녁/밤)',
                   '${state.energy['morning']} / ${state.energy['afternoon']} / ${state.energy['evening']} / ${state.energy['night']}',
+                  scheme: scheme,
                 ),
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Color(0x14FFFFFF),
+                  color: scheme.outlineVariant,
                 ),
                 _buildSummaryRow(
                   '사용 방식',
@@ -136,17 +140,17 @@ class Step6Summary extends ConsumerWidget {
                           .map((k) => intentMap[k] ?? k)
                           .join('\n'),
                   isMultiline: state.intents.length > 1,
+                  scheme: scheme,
                 ),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             '다음 단계: 홈 화면에서 "지금 몇 분 가능해?" + "에너지 어때?"를 받아서 가능한 일만 보여주면 MVP 완성!',
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0x73FFFFFF),
+            style: textTheme.bodySmall?.copyWith(
               height: 1.4,
+              color: scheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -154,7 +158,12 @@ class Step6Summary extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(String key, String value, {bool isMultiline = false}) {
+  Widget _buildSummaryRow(
+    String key,
+    String value, {
+    bool isMultiline = false,
+    required ColorScheme scheme,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -165,9 +174,9 @@ class Step6Summary extends ConsumerWidget {
             flex: 2,
             child: Text(
               key,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: Color(0x73FFFFFF),
+                color: scheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -176,9 +185,9 @@ class Step6Summary extends ConsumerWidget {
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Color(0xE8FFFFFF),
+                color: scheme.onSurface,
               ),
             ),
           ),
