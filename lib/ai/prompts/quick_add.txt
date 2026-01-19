@@ -1,0 +1,7 @@
+Parse the following todo input and extract:
+- Title
+- Priority (if indicated)
+- Due date (if mentioned)
+- Tags (if any)
+
+Input: {input}

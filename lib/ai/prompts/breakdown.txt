@@ -1,0 +1,6 @@
+Break down the following goal into actionable steps:
+- Each step should be specific and measurable
+- Include estimated time or effort if possible
+- Order steps logically
+
+Goal: {goal}

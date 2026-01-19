@@ -1,0 +1,6 @@
+Analyze the following todos and provide insights:
+- Completion rate
+- Common patterns
+- Recommendations for improvement
+
+Todos: {todos}
